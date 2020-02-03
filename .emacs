@@ -8,7 +8,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Installing all packages
-(defvar *my-packages* '(elpy py-autopep8 py-import-check sphinx-doc sphinx-frontend sphinx-mode flymake-python-pyflakes importmagic jedi auctex ess lua-mode flycheck-julia julia-mode julia-repl julia-shell plan9-theme cmake-mode exec-path-from-shell magit js2-mode js2-refactor xref-js2 markdown-mode markdown-mode+ use-package))
+
+(setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check sphinx-doc sphinx-frontend sphinx-mode flymake-python-pyflakes importmagic jedi))
+
+(setq *julia-pkgs* '(flycheck-julia julia-mode julia-repl julia-shell))
+
+(setq *misc-packages* '(auctex ess lua-mode plan9-theme cmake-mode exec-path-from-shell magit js2-mode js2-refactor xref-js2 markdown-mode markdown-mode+ use-package))
+
+(setq *my-packages* (append *python-pkgs* *julia-pkgs* *misc-packages*))
 
 (package-refresh-contents)
 
@@ -16,7 +23,7 @@
   "Installs a package if not already installed."
   (if (not (null p))
       (unless (package-installed-p p)
-        (package-install p)))
+    (package-install p)))
   (package-installed-p p))
 
 (mapcar 'process-pkg *my-packages*)
@@ -203,17 +210,17 @@
               (setq TeX-source-correlate-method 'synctex)
               (setq TeX-source-correlate-start-server t))))
 
-;; ;; Update PDF buffers after successful LaTeX runs
-;; (add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
-;;            #'TeX-revert-document-buffer)
+;; Update PDF buffers after successful LaTeX runs
+;;(add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
+;;           #'TeX-revert-document-buffer)
 
-;; ;; to use pdfview with auctex
-;; (add-hook 'LaTeX-mode-hook 'pdf-tools-install)
+;; to use pdfview with auctex
+;;(add-hook 'LaTeX-mode-hook 'pdf-tools-install)
 
-;; ;; to use pdfview with auctex
-;; (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
-;;        TeX-source-correlate-start-server t)
-;; (setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))))
+;; to use pdfview with auctex
+;;(setq TeX-view-program-selection '((output-pdf "pdf-tools"))
+;;       TeX-source-correlate-start-server t)
+;;(setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ESS
@@ -247,11 +254,6 @@
 
 ;;(add-hook 'js2-mode-hook (lambda ()
 ;;  (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; NOV.EL
-(use-package nov
-  :mode ("\\.epub\\'" . nov-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
@@ -293,4 +295,3 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-(put 'upcase-region 'disabled nil)
