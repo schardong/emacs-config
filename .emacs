@@ -13,9 +13,11 @@
 
 (setq *julia-pkgs* '(flycheck-julia julia-mode julia-repl julia-shell))
 
-(setq *misc-packages* '(auctex ess lua-mode plan9-theme cmake-mode exec-path-from-shell magit js2-mode js2-refactor xref-js2 markdown-mode markdown-mode+ use-package))
+(setq *js-pkgs* '(js2-mode js2-refactor xref-js2))
 
-(setq *my-packages* (append *python-pkgs* *julia-pkgs* *misc-packages*))
+(setq *misc-packages* '(auctex ess lua-mode plan9-theme cmake-mode exec-path-from-shell magit markdown-mode markdown-mode+ use-package org-bullets))
+
+(setq *my-packages* (append *python-pkgs* *julia-pkgs* *js-packages* *misc-packages*))
 
 (package-refresh-contents)
 
@@ -48,6 +50,8 @@
 (setq-default line-spacing 3)
 (setq-default indent-tabs-mode nil
               tab-width 4)
+
+(load-theme 'plan9 t)
 
 (use-package company
   :config
@@ -148,7 +152,6 @@
     (exec-path-from-shell-initialize)))
 
 (use-package markdown-mode :hook (markdown-mode . visual-line-mode))
-;; (use-package json-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
@@ -228,8 +231,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Lua-mode
-(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
-(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
+(use-package lua-mode
+  :mode ("\\.lua$" . lua-mode)
+  :interpreter ("lua" . lua-mode))
+
+;; (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JS2-mode
@@ -238,60 +244,3 @@
   :mode ("\\.js\\'" . js2-mode)
   :hook ((js2-mode-hook . js2-imenu-extras-mode)
          (js2-mode-hook . js2-refactor-mode)))
-
-;;(require 'js2-mode)
-;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-
-;; Better imenu
-;;(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-;;(add-hook 'js2-mode-hook #'js2-refactor-mode)
-;;(js2r-add-keybindings-with-prefix "C-c C-r")
-;;(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-
-;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
-;; unbind it.
-;;(define-key js-mode-map (kbd "M-.") nil)
-
-;;(add-hook 'js2-mode-hook (lambda ()
-;;  (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
- '(column-number-mode t)
- '(custom-enabled-themes (quote (plan9)))
- '(custom-safe-themes
-   (quote
-    ("30289fa8d502f71a392f40a0941a83842152a68c54ad69e0638ef52f04777a4c" "c9e02bc73b027c25da6d5d3eee642f7892bb409a32acecd2ae8c7b5df52c068f" "ef1e992ef341e86397b39ee6b41c1368e1b33d45b0848feac6a8e8d5753daa67" default)))
- '(elpy-rpc-python-command "/Users/gschardong/.pyenv/shims/python3")
- '(elpy-syntax-check-command "/usr/local/bin/flake8")
- '(elpy-test-discover-runner-command (quote ("python3" "-m" "unittest")))
- '(fci-rule-color "#f8fce8")
- '(hl-paren-background-colors (quote ("#e8fce8" "#c1e7f8" "#f8e8e8")))
- '(hl-paren-colors (quote ("#40883f" "#0287c8" "#b85c57")))
- '(org-agenda-files
-   (quote
-    ("~/Google Drive/org/home.org" "~/Google Drive/org/research.org" "~/Google Drive/org/simpad.org")))
- '(package-selected-packages
-   (quote
-    (pip-requirements magit-popup py-isort pyenv-mode pyenv-mode-auto python-docstring company-auctex company-bibtex company-lua company-jedi json-mode markdown-mode+ js2-refactor glsl-mode go-autocomplete go-direx go-mode ob-ipython org-babel-eval-in-repl nil flycheck-julia julia-shell ein-mumamo plan9-theme flycheck-swift swift-mode sphinx-doc sphinx-frontend sphinx-mode flymake-python-pyflakes importmagic cmake-mode py-autopep8 py-import-check magithub)))
- '(python-flymake-command (quote ("\"flake8\" \"-\"")))
- '(python-shell-interpreter "/Users/gschardong/.pyenv/shims/python3")
- '(safe-local-variable-values (quote ((TeX-master . thesis\.tex))))
- '(sml/active-background-color "#98ece8")
- '(sml/active-foreground-color "#424242")
- '(sml/inactive-background-color "#4fa8a8")
- '(sml/inactive-foreground-color "#424242"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
