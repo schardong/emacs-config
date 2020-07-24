@@ -213,18 +213,6 @@
               (setq TeX-source-correlate-method 'synctex)
               (setq TeX-source-correlate-start-server t))))
 
-;; Update PDF buffers after successful LaTeX runs
-;;(add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
-;;           #'TeX-revert-document-buffer)
-
-;; to use pdfview with auctex
-;;(add-hook 'LaTeX-mode-hook 'pdf-tools-install)
-
-;; to use pdfview with auctex
-;;(setq TeX-view-program-selection '((output-pdf "pdf-tools"))
-;;       TeX-source-correlate-start-server t)
-;;(setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ESS
 (require 'ess-site)
@@ -234,8 +222,6 @@
 (use-package lua-mode
   :mode ("\\.lua$" . lua-mode)
   :interpreter ("lua" . lua-mode))
-
-;; (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JS2-mode
