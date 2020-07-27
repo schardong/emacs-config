@@ -15,9 +15,9 @@
 
 (setq *js-pkgs* '(js2-mode js2-refactor xref-js2))
 
-(setq *misc-packages* '(auctex ess lua-mode plan9-theme cmake-mode exec-path-from-shell magit markdown-mode markdown-mode+ use-package org-bullets))
+(setq *misc-pkgs* '(auctex ess lua-mode plan9-theme cmake-mode exec-path-from-shell magit markdown-mode markdown-mode+ use-package org-bullets))
 
-(setq *my-packages* (append *python-pkgs* *julia-pkgs* *js-packages* *misc-packages*))
+(setq *my-pkgs* (append *python-pkgs* *julia-pkgs* *js-pkgs* *misc-pkgs*))
 
 (package-refresh-contents)
 
@@ -28,7 +28,7 @@
     (package-install p)))
   (package-installed-p p))
 
-(mapcar 'process-pkg *my-packages*)
+(mapcar 'process-pkg *my-pkgs*)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. options
