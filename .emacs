@@ -37,8 +37,8 @@
 (when (version<= "26.1" emacs-version)
   (global-display-line-numbers-mode))
 
-;; (tool-bar-mode -1)
-;; (menu-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
 (scroll-bar-mode -1)
 (column-number-mode +1)
 
@@ -138,10 +138,10 @@
     :hook (org-mode . org-bullets-mode))
   (setq org-log-done t)
   (setq org-agenda-files (list
-                          "~/Google Drive/org/home.org"
-                          "~/Google Drive/org/research.org"
-                          "~/Google Drive/org/simpad.org"
-                          "~/Google Drive/org/d2s.org")))
+                          "~/Documents/org/home.org"
+                          "~/Documents/org/research.org"
+                          "~/Documents/org/simpad.org"
+                          "~/Documents/org/d2s.org")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; READING PATH FROM SHELL
@@ -186,8 +186,6 @@
   :bind
   ("C-x p e" . pyenv-activate-current-project))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Sort python import statements before saving the buffer
 (use-package py-isort
   :ensure nil
   :config (add-hook 'before-save-hook 'py-isort-before-save))
@@ -198,9 +196,10 @@
   :ensure auctex
   :mode ("\\.tex\\'" . latex-mode)
   :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
   (setq-default TeX-master nil)
+  (setq TeX-auto-save t
+        TeX-save-query nil
+        TeX-parse-self t)
   (add-hook 'LaTeX-mode-hook
             (lambda ()
               (rainbow-delimiters-mode)
@@ -212,6 +211,34 @@
               (setq TeX-PDF-mode t)
               (setq TeX-source-correlate-method 'synctex)
               (setq TeX-source-correlate-start-server t))))
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
+           #'TeX-revert-document-buffer)
+
+;; to use pdfview with auctex
+(add-hook 'LaTeX-mode-hook 'pdf-tools-install)
+
+;; to use pdfview with auctex
+(setq TeX-view-program-selection '((output-pdf "pdf-tools"))
+       TeX-source-correlate-start-server t)
+(setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
+
+(use-package reftex
+  :ensure t
+  :defer t
+  :config
+  (setq reftex-cite-prompt-optional-args t))
+
+(use-package pdf-tools
+  :ensure t
+  :mode ("\\.pdf\\'" . pdf-tools-install)
+  :bind ("C-c C-g" . pdf-sync-forward-search)
+  :defer t
+  :config
+  (setq mouse-wheel-follow-mouse t
+        pdf-view-resize-factor 1.10))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ESS
