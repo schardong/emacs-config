@@ -18,7 +18,7 @@
 
 (setq *cpp-pkgs* '(clang-format cmake-mode));; cmake-ide rtags company-rtags))
 
-(setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check sphinx-doc sphinx-frontend sphinx-mode flycheck-pyflakes importmagic jedi))
+(setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check flycheck-pyflakes importmagic jedi))
 
 (setq *julia-pkgs* '(flycheck-julia julia-mode julia-repl julia-shell))
 
