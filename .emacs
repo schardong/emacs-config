@@ -26,7 +26,9 @@
 
 (setq *lisp-pkgs* '(slime slime-company))
 
-(setq *misc-pkgs* '(auctex dockerfile-mode ess lua-mode plan9-theme exec-path-from-shell graphviz-dot-mode  magit markdown-mode markdown-mode+ org-bullets))
+(setq *docker-pkgs* '(dockerfile-mode docker-compose-mode))
+
+(setq *misc-pkgs* '(auctex plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets))
 
 (setq *my-pkgs* (append *cpp-pkgs* *python-pkgs* *julia-pkgs* *js-pkgs* *lisp-pkgs* *misc-pkgs*))
 
@@ -97,9 +99,9 @@
 (use-package eldoc
   :ensure nil
   :diminish eldoc-mode
+  :hook (prog-mode . eldoc-mode)
   :config
   (global-eldoc-mode -1)
-  (add-hook 'prog-mode-hook 'eldoc-mode)
   (setq eldoc-idle-delay 0.4))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -112,8 +114,7 @@
 
 (use-package elec-pair
   :ensure nil
-  :config
-  (add-hook 'prog-mode-hook 'electric-pair-mode))
+  :hook (prog-mode . electric-pair-mode))
 
 (use-package company
   :ensure t
@@ -124,7 +125,7 @@
 ;; Remove whitespaces and empty lines
 (use-package whitespace
   :ensure nil
-  :config (add-hook 'before-save-hook 'whitespace-cleanup))
+  :hook (before-save . whitespace-cleanup))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Magit
@@ -143,8 +144,7 @@
 (use-package org
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
-         (org-mode . flyspell-mode)
-         (org-mode . turn-on-auto-fill))
+         (org-mode . flyspell-mode))
   :config
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-<tab>") nil)
@@ -155,9 +155,25 @@
   (setq org-log-done t
         org-agenda-files (list
                           "~/Documents/org/home.org"
-                          "~/Documents/org/research.org"
-                          "~/Documents/org/simpad.org"
-                          "~/Documents/org/d2s.org")))
+                          "~/Documents/org/visgraf.org"
+                          "~/Documents/org/siarp.org")))
+
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "~/Documents/roam/"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  (org-roam-db-autosync-mode)
+  (setq org-roam-v2-ack t)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; READING PATH FROM SHELL
@@ -215,6 +231,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
 (use-package python
+  :ensure t
   :defer 10
   :hook python-mode-hook
   :init (setq-default indent-tabs-mode nil)
@@ -226,6 +243,7 @@
   (setq python-indent-offset 4))
 
 (use-package elpy
+  :ensure t
   :after (company python)
   :init (elpy-enable)
   :config
@@ -236,6 +254,7 @@
   (elpy-mode . hs-minor-mode))
 
 (use-package pyenv-mode
+  :ensure t
   :if
   (executable-find "pyenv")
   :init
@@ -256,10 +275,10 @@
   :ensure auctex
   :mode ("\\.tex\\'" . latex-mode)
   :config
-  (setq-default TeX-master nil)
-  (setq TeX-auto-save t
-        TeX-save-query nil
-        TeX-parse-self t)
+  (setq-default TeX-master nil
+                TeX-auto-save t
+                TeX-save-query nil
+                TeX-parse-self t)
   (add-hook 'LaTeX-mode-hook
             (lambda ()
               (rainbow-delimiters-mode)
@@ -298,10 +317,6 @@
   :config
   (setq mouse-wheel-follow-mouse t
         pdf-view-resize-factor 1.10))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ESS
-(use-package 'ess-site)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Lua-mode
