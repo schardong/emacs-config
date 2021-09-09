@@ -16,7 +16,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Installing all packages
 
-(setq *cpp-pkgs* '(clang-format cmake-mode));; cmake-ide rtags company-rtags))
+(setq *cpp-pkgs* '(clang-format cmake-mode))
+
+(setq *go-pkgs* '(company-go flycheck-golangci-lint go-mode go-scratch go-snippets))
 
 (setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check flycheck-pyflakes importmagic jedi))
 
@@ -30,7 +32,7 @@
 
 (setq *misc-pkgs* '(auctex plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets))
 
-(setq *my-pkgs* (append *cpp-pkgs* *python-pkgs* *julia-pkgs* *js-pkgs* *lisp-pkgs* *misc-pkgs*))
+(setq *my-pkgs* (append *cpp-pkgs* *docker-pkgs* *go-pkgs* *python-pkgs* *js-pkgs* *lisp-pkgs* *misc-pkgs*))
 
 (package-refresh-contents)
 
@@ -349,3 +351,9 @@
         common-lisp-hyperspec-issuex-table (concat common-lisp-hyperspec-root "Data/Map_IssX.txt"))
   :mode (("\\.lisp\\'" . slime-mode)
          ("\\.lisp\\'" . lisp-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Docker
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker))
