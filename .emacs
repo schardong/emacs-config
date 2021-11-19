@@ -20,7 +20,7 @@
 
 (setq *go-pkgs* '(company-go flycheck-golangci-lint go-mode go-scratch go-snippets))
 
-(setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check flycheck-pyflakes importmagic jedi))
+(setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check flymake-python-pyflakes importmagic jedi))
 
 (setq *julia-pkgs* '(flycheck-julia julia-mode julia-repl julia-shell))
 
@@ -30,11 +30,11 @@
 
 (setq *docker-pkgs* '(dockerfile-mode docker-compose-mode))
 
-(setq *misc-pkgs* '(auctex plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets))
+(setq *misc-pkgs* '(auctex plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets restclient))
 
 (setq *my-pkgs* (append *cpp-pkgs* *docker-pkgs* *go-pkgs* *python-pkgs* *js-pkgs* *lisp-pkgs* *misc-pkgs*))
 
-(package-refresh-contents)
+;; (package-refresh-contents)
 
 (defun process-pkg (p)
   "Installs a package if not already installed."
@@ -139,11 +139,11 @@
   ("C-x g c" . magit-commit)
   ("C-x g p" . magit-push))
 
-(use-package magit-popup)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG-MODE
 (use-package org
+  :ensure nil
+  :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . flyspell-mode))
