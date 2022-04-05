@@ -15,7 +15,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Installing all packages
-
 (setq *cpp-pkgs* '(clang-format cmake-mode))
 
 (setq *go-pkgs* '(company-go flycheck-golangci-lint go-mode go-scratch go-snippets))
@@ -30,11 +29,11 @@
 
 (setq *docker-pkgs* '(dockerfile-mode docker-compose-mode))
 
-(setq *misc-pkgs* '(auctex plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets restclient))
+(setq *misc-pkgs* '(plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets))
 
-(setq *my-pkgs* (append *cpp-pkgs* *docker-pkgs* *go-pkgs* *python-pkgs* *js-pkgs* *lisp-pkgs* *misc-pkgs*))
+(setq *my-pkgs* (append *cpp-pkgs* *python-pkgs* *misc-pkgs*))
 
-;; (package-refresh-contents)
+(package-refresh-contents)
 
 (defun process-pkg (p)
   "Installs a package if not already installed."
@@ -132,6 +131,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Magit
 (use-package magit
+  :ensure t
   :bind
   ("C-x g s" . magit-status)
   ("C-x g m" . magit-merge)
@@ -142,23 +142,28 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG-MODE
 (use-package org
-  :ensure nil
+  :ensure t
   :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
-         (org-mode . flyspell-mode))
+         (org-mode . flyspell-mode)
+         (org-mode . yas-minor-mode))
   :config
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-<tab>") nil)
-    (define-key org-mode-map "C-c l" 'org-store-link)
-    (define-key org-mode-map "C-c a" 'org-agenda))
+    (define-key org-mode-map "C-cl" 'org-store-link)
+    (define-key org-mode-map "C-ca" 'org-agenda))
   (use-package org-bullets
+    :ensure t
     :hook (org-mode . org-bullets-mode))
   (setq org-log-done t
-        org-agenda-files (list
-                          "~/Documents/org/home.org"
-                          "~/Documents/org/visgraf.org"
-                          "~/Documents/org/siarp.org")))
+        org-agenda-files (file-expand-wildcards "~/Documents/org/*.org")
+        org-todo-keywords '((sequence "TODO"
+                                      "WAITING"
+                                      "|"
+                                      "DEFERRED"
+                                      "CANCELLED"
+                                      "DONE"))))
 
 (use-package org-roam
   :ensure t
@@ -187,6 +192,7 @@
     (exec-path-from-shell-initialize))
 
 (use-package markdown-mode
+  :ensure t
   :hook (markdown-mode . visual-line-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -267,10 +273,6 @@
   :bind
   ("C-x p e" . pyenv-activate-current-project))
 
-(use-package py-isort
-  :ensure nil
-  :hook (before-save . py-isort-before-save))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; AUCTEX
 (use-package tex-site
@@ -323,37 +325,38 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Lua-mode
 (use-package lua-mode
+  :ensure t
   :mode ("\\.lua$" . lua-mode)
   :interpreter ("lua" . lua-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JS2-mode
-(use-package js2-mode
-  :ensure nil
-  :mode ("\\.js\\'" . js2-mode)
-  :hook ((js2-mode . js2-imenu-extras-mode)
-         (js2-mode . js2-refactor-mode)))
+;; (use-package js2-mode
+;;   :ensure nil
+;;   :mode ("\\.js\\'" . js2-mode)
+;;   :hook ((js2-mode . js2-imenu-extras-mode)
+;;          (js2-mode . js2-refactor-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LISP and SLIME
-(use-package slime
-  :ensure t
-  :defer t
-  :init
-  (setq inferior-lisp-program "sbcl"
-        slime-contribs '(slime-fancy slime-quicklisp slime-asdf)
-        slime-complete-symbol-function 'slime-fuzzy-complete-symbol
-        slime-net-coding-system 'utf-8-unix
-        slime-lisp-implementations '((sbcl ("/usr/bin/sbcl"))))
-  :config
-  (setq common-lisp-hyperspec-root "/usr/share/doc/hyperspec/HyperSpec/"
-        common-lisp-hyperspec-symbol-table (concat common-lisp-hyperspec-root "Data/Map_Sym.txt")
-        common-lisp-hyperspec-issuex-table (concat common-lisp-hyperspec-root "Data/Map_IssX.txt"))
-  :mode (("\\.lisp\\'" . slime-mode)
-         ("\\.lisp\\'" . lisp-mode)))
+;; (use-package slime
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   (setq inferior-lisp-program "sbcl"
+;;         slime-contribs '(slime-fancy slime-quicklisp slime-asdf)
+;;         slime-complete-symbol-function 'slime-fuzzy-complete-symbol
+;;         slime-net-coding-system 'utf-8-unix
+;;         slime-lisp-implementations '((sbcl ("/usr/bin/sbcl"))))
+;;   :config
+;;   (setq common-lisp-hyperspec-root "/usr/share/doc/hyperspec/HyperSpec/"
+;;         common-lisp-hyperspec-symbol-table (concat common-lisp-hyperspec-root "Data/Map_Sym.txt")
+;;         common-lisp-hyperspec-issuex-table (concat common-lisp-hyperspec-root "Data/Map_IssX.txt"))
+;;   :mode (("\\.lisp\\'" . slime-mode)
+;;          ("\\.lisp\\'" . lisp-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Docker
-(use-package docker
-  :ensure t
-  :bind ("C-c d" . docker))
+;; (use-package docker
+;;   :ensure t
+;;   :bind ("C-c d" . docker))
