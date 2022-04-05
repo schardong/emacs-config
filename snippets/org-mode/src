@@ -1,6 +1,7 @@
 # -*- mode: snippet -*-
 # name: src
 # key: src
+# contributor: Guilherme Schardong
 # --
 #+BEGIN_SRC $1
 $0
