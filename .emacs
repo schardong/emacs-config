@@ -4,6 +4,7 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 ;; Configure and bootstrap `use-package'
@@ -29,11 +30,15 @@
 
 (setq *docker-pkgs* '(dockerfile-mode docker-compose-mode))
 
-(setq *misc-pkgs* '(plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets))
+(setq *misc-pkgs* '(auctex plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets))
 
 (setq *my-pkgs* (append *cpp-pkgs* *python-pkgs* *misc-pkgs*))
 
-(package-refresh-contents)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(unless (package-installed-p 'org)
+  (package-install 'org))
 
 (defun process-pkg (p)
   "Installs a package if not already installed."
@@ -325,7 +330,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Lua-mode
 (use-package lua-mode
-  :ensure t
   :mode ("\\.lua$" . lua-mode)
   :interpreter ("lua" . lua-mode))
 
