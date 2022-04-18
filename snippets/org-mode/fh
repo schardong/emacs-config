@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: file-header
+# key: fh
+# contributor: Guilherme Schardong
+# --
+#+TITLE: $1
+#+AUTHOR: Guilherme Schardong
+#+EMAIL: guilherme.schardong@isr.uc.pt
+#+DATE: `(format-time-string "%Y-%m-%d %H:%M%z")`
+
+$0

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: comment
+# key: comment
+# contributor: Guilherme Schardnog
+# --
+#+BEGIN_COMMENT
+$0
+#+END_COMMENT
