@@ -1,6 +1,8 @@
+# -*- mode: snippet -*-
 # key: python
 # name: python
+# contributor: Guilherme Schardong
 # --
 #+BEGIN_SRC python
-
+$0
 #+END_SRC
