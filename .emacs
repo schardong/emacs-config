@@ -74,6 +74,10 @@
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
+;; key bindings for macos
+(when (eq system-type 'darwin)
+  (setq mac-right-option-modifier 'none))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Better window splitting
 (use-package "window"
