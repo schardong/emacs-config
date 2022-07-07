@@ -20,7 +20,7 @@
 
 (setq *go-pkgs* '(company-go flycheck-golangci-lint go-mode go-scratch go-snippets))
 
-(setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check flymake-python-pyflakes importmagic jedi))
+(setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check flymake-python-pyflakes importmagic jedi ein))
 
 (setq *julia-pkgs* '(flycheck-julia julia-mode julia-repl julia-shell))
 
@@ -30,7 +30,7 @@
 
 (setq *docker-pkgs* '(dockerfile-mode docker-compose-mode))
 
-(setq *misc-pkgs* '(auctex plan9-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets))
+(setq *misc-pkgs* '(auctex plan9-theme eink-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets yaml-mode))
 
 (setq *my-pkgs* (append *cpp-pkgs* *python-pkgs* *misc-pkgs*))
 
