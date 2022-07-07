@@ -1,0 +1,6 @@
+# key: limg
+# name: localimage
+# --
+#+NAME: fig:$1
+#+CAPTION: $2
+[[file:$0]]

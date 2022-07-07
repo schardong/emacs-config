@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: pad-zeroes
+# key: pad
+# contributor: Guilherme Schardong
+# --
+{$1:0>$2}$0
