@@ -74,9 +74,22 @@
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
-;; key bindings for macos
+;; key bindings for macos (from https://www.emacswiki.org/emacs/EmacsForMacOS#h5o-24)
 (when (eq system-type 'darwin)
   (setq mac-right-option-modifier 'none))
+
+;; Binding modifier keys
+;; The variables available for binding the modifier keys:
+
+;; mac-function-modifier
+;; mac-control-modifier
+;; mac-command-modifier
+;; mac-option-modifier
+;; mac-right-command-modifier
+;; mac-right-control-modifier
+;; mac-right-option-modifier
+
+;; values can be 'control, 'alt, 'meta, 'super, 'hyper, nil (setting to nil allows the OS to assign values)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Better window splitting
