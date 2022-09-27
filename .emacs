@@ -170,11 +170,12 @@
          (org-mode . org-indent-mode)
          (org-mode . flyspell-mode)
          (org-mode . yas-minor-mode))
+  :bind
+  (("C-c l" . org-store-link)
+   ("C-c a" . org-agenda))
   :config
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "C-<tab>") nil)
-    (define-key org-mode-map "C-cl" 'org-store-link)
-    (define-key org-mode-map "C-ca" 'org-agenda))
+    (define-key org-mode-map (kbd "C-<tab>") nil))
   (use-package org-bullets
     :ensure t
     :hook (org-mode . org-bullets-mode))
@@ -189,20 +190,28 @@
 
 (use-package org-roam
   :ensure t
+  :after org
+  :init (setq org-roam-v2-ack t)
   :custom
   (org-roam-directory (file-truename "~/Documents/roam/"))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
+  :bind (("C-c n f" . org-roam-node-find)
+         ("C-c n r" . org-roam-node-random)
          ("C-c n g" . org-roam-graph)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         ;; Dailies
-         ("C-c n j" . org-roam-dailies-capture-today))
+         (:map org-mode-map
+               (("C-c n l" . org-roam-buffer-toggle)
+                ("C-c n i" . org-roam-node-insert)
+                ("C-c n c" . org-roam-capture)
+                ("C-c n o" . org-id-get-create)
+                ("C-c n t" . org-roam-tag-add)
+                ("C-c n a" . org-roam-alias-add))))
   :config
+  (org-roam-setup)
   (org-roam-db-autosync-mode)
-  (setq org-roam-v2-ack t)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol))
+
+(use-package org-tree-slide
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; READING PATH FROM SHELL
@@ -224,6 +233,16 @@
               indent-tabs-mode nil
               tab-width 4)
 
+(defun cppreference-query ()
+  "Searches cppreference"
+  (interactive)
+  (browse-url
+   (concat
+    "https://en.cppreference.com/mwiki/index.php?title=Special:Search&search="
+    (if mark-active
+        (buffer-substring (region-beginning) (region-end))
+      (read-string "cppreference: ")))))
+
 (defun cleanup-c-buffer ()
   "Correctly indent, remove tabs and extra whitespace in C source code"
   (interactive)
@@ -235,7 +254,8 @@
   :bind
   (:map c++-mode-map
         ("C-c c d" . clang-format-defun)
-        ("C-c c r" . clang-format-region)))
+        ("C-c c r" . clang-format-region)
+        ("C-c c q" . cppreference-query)))
 
 (use-package clang-format
   :ensure t
@@ -247,16 +267,6 @@
       (mark-defun)
       (clang-format-region (region-beginning) (region-end))
       (deactivate-mark))))
-
-(defun cppreference-query ()
-  "Searches cppreference"
-  (interactive)
-  (browse-url
-   (concat
-    "https://en.cppreference.com/mwiki/index.php?title=Special:Search&search="
-    (if mark-active
-        (buffer-substring (region-beginning) (region-end))
-      (read-string "cppreference: ")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
