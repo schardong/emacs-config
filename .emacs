@@ -4,7 +4,6 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 ;; Configure and bootstrap `use-package'
@@ -64,6 +63,13 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (column-number-mode +1)
+
+;; Typed text replaces the selection if the selection is active,
+;; pressing delete or backspace deletes the selection.
+(delete-selection-mode)
+
+;; Make shebang (#!) file executable when saved
+(add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
 (setq scroll-margin 0
       scroll-conservatively 10000
@@ -288,6 +294,7 @@
   :init (elpy-enable)
   :config
   (setq elpy-rpc-backend "jedi"
+        elpy-rpc-python-command "python"
         py-autopep8-options '("--ignore E402"))
   :hook
   (elpy-mode . py-autopep8-enable-on-save)
@@ -321,6 +328,8 @@
               (company-mode)
               (smartparens-mode)
               (turn-on-reftex)
+              (reftex-mode t)
+              (flyspell-mode t)
               (setq reftex-plug-into-AUCTeX t)
               (reftex-isearch-minor-mode)
               (setq TeX-PDF-mode t)
@@ -341,9 +350,10 @@
 
 (use-package reftex
   :ensure t
-  :defer t
+  :after (auctex)
   :config
-  (setq reftex-cite-prompt-optional-args t))
+  (setq reftex-cite-prompt-optional-args t
+        reftex-plug-into-AUCTeX t))
 
 (use-package pdf-tools
   :ensure t
