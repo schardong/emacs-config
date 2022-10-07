@@ -310,6 +310,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
+
+(defun pyenv-activate-current-project ()
+  "Automatically activates pyenv version if .python-version file exists.
+  Ref: http://rakan.me/emacs/python-dev-with-emacs-and-pyenv/"
+  (interactive)
+  (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
+    (if python-version-directory
+        (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
+               (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
+          (pyenv-mode-set pyenv-current-version)
+          (message (concat "Setting virtualenv to " pyenv-current-version))))))
+
 (use-package python
   :ensure t
   :defer 10
@@ -329,6 +341,7 @@
   :config
   (setq elpy-rpc-backend "jedi"
         elpy-rpc-python-command "python"
+        elpy-rpc-virtualenv-path 'current
         py-autopep8-options '("--ignore E402"))
   :hook
   (elpy-mode . py-autopep8-enable-on-save)
