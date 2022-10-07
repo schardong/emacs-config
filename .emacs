@@ -15,7 +15,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Installing all packages
-(setq *cpp-pkgs* '(clang-format cmake-mode))
+(setq *cpp-pkgs* '(clang-format cmake-mode eldoc project xref eglot))
 
 (setq *go-pkgs* '(company-go flycheck-golangci-lint go-mode go-scratch go-snippets))
 
@@ -96,6 +96,27 @@
 ;; mac-right-option-modifier
 
 ;; values can be 'control, 'alt, 'meta, 'super, 'hyper, nil (setting to nil allows the OS to assign values)
+;; Only y/n answers
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; Open dired folders in same buffer
+(put 'dired-find-alternate-file 'disabled nil)
+;; Sort Dired buffers
+(setq dired-listing-switches "-agho --group-directories-first")
+
+(setq dired-guess-shell-alist-user `(("\\.mp4\\'" "mpv")))
+
+(defun w/topic-butterfly (topic)
+  (interactive "Mtopic: ")
+  (progn
+    (switch-to-buffer (get-buffer-create "*topic*"))
+    (erase-buffer)
+    (sit-for 0)
+    (animate-string topic
+                    (- (/ (window-height) 2) 5)
+                    (- (/ (window-width) 2)
+                       (/ (length topic) 2)))
+    (sit-for (* 5 (/ (abs (random)) (float most-positive-fixnum))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Better window splitting
@@ -273,6 +294,19 @@
       (mark-defun)
       (clang-format-region (region-beginning) (region-end))
       (deactivate-mark))))
+
+(use-package project :ensure t)
+
+(use-package eglot
+  :ensure t
+  :after '(project python-mode)
+  :config
+  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+  (add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
+  :hook
+  (c-mode . eglot-ensure)
+  (c++-mode . eglot-ensure)
+  (python-mode . eglot-ensure))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
