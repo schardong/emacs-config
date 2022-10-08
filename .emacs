@@ -208,56 +208,8 @@
   ("C-x g p" . magit-push))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ORG-MODE
-(use-package org
-  :ensure t
-  :mode ("\\.org\\'" . org-mode)
-  :hook ((org-mode . visual-line-mode)
-         (org-mode . org-indent-mode)
-         (org-mode . flyspell-mode)
-         (org-mode . yas-minor-mode))
-  :bind
-  (("C-c l" . org-store-link)
-   ("C-c a" . org-agenda))
-  :config
-  (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "C-<tab>") nil))
-  (use-package org-bullets
-    :ensure t
-    :hook (org-mode . org-bullets-mode))
-  (setq org-log-done t
-        org-agenda-files (file-expand-wildcards "~/Documents/org/*.org")
-        org-todo-keywords '((sequence "TODO"
-                                      "WAITING"
-                                      "|"
-                                      "DEFERRED"
-                                      "CANCELLED"
-                                      "DONE"))))
-
-(use-package org-roam
-  :ensure t
-  :after org
-  :init (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory (file-truename "~/Documents/roam/"))
-  :bind (("C-c n f" . org-roam-node-find)
-         ("C-c n r" . org-roam-node-random)
-         ("C-c n g" . org-roam-graph)
-         (:map org-mode-map
-               (("C-c n l" . org-roam-buffer-toggle)
-                ("C-c n i" . org-roam-node-insert)
-                ("C-c n c" . org-roam-capture)
-                ("C-c n o" . org-id-get-create)
-                ("C-c n t" . org-roam-tag-add)
-                ("C-c n a" . org-roam-alias-add))))
-  :config
-  (org-roam-setup)
-  (org-roam-db-autosync-mode)
-  ;; If using org-roam-protocol
-  (require 'org-roam-protocol))
-
-(use-package org-tree-slide
-  :ensure t)
+;; Org and ROAM
+(load-file "~/.emacs.d/modes/org-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; READING PATH FROM SHELL
@@ -268,57 +220,15 @@
   :config
     (exec-path-from-shell-initialize))
 
-(use-package markdown-mode
-  :ensure t
-  :hook (markdown-mode . visual-line-mode))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C/C++ packages and configs
-(setq-default c-default-style "k&r"
-              c-basic-offset 4
-              indent-tabs-mode nil
-              tab-width 4)
-
-(defun cppreference-query ()
-  "Searches cppreference"
-  (interactive)
-  (browse-url
-   (concat
-    "https://en.cppreference.com/mwiki/index.php?title=Special:Search&search="
-    (if mark-active
-        (buffer-substring (region-beginning) (region-end))
-      (read-string "cppreference: ")))))
-
-(defun cleanup-c-buffer ()
-  "Correctly indent, remove tabs and extra whitespace in C source code"
-  (interactive)
-  (c-indent-region (point-min) (point-max))
-  (untabify (point-min) (point-max))
-  (whitespace-cleanup-region (point-min) (point-max)))
-
-(use-package cc-mode
-  :bind
-  (:map c++-mode-map
-        ("C-c c d" . clang-format-defun)
-        ("C-c c r" . clang-format-region)
-        ("C-c c q" . cppreference-query)))
-
-(use-package clang-format
-  :ensure t
-  :after cc-mode
-  :init
-  (defun clang-format-defun ()
-    (interactive)
-    (save-excursion
-      (mark-defun)
-      (clang-format-region (region-beginning) (region-end))
-      (deactivate-mark))))
+(load-file "~/.emacs.d/modes/c-mode.el")
 
 (use-package project :ensure t)
 
 (use-package eglot
   :ensure t
-  :after '(project python-mode)
+  :after 'project
   :config
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
   (add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
@@ -329,120 +239,19 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
-
-(defun pyenv-activate-current-project ()
-  "Automatically activates pyenv version if .python-version file exists.
-  Ref: http://rakan.me/emacs/python-dev-with-emacs-and-pyenv/"
-  (interactive)
-  (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
-    (if python-version-directory
-        (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
-               (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
-          (pyenv-mode-set pyenv-current-version)
-          (message (concat "Setting virtualenv to " pyenv-current-version))))))
-
-(use-package python
-  :ensure t
-  :defer 10
-  :hook python-mode-hook
-  :init (setq-default indent-tabs-mode nil)
-  :mode
-  ("\\.py\\'" . python-mode)
-  ("\\.wsgi$" . python-mode)
-  :interpreter ("python" . python-mode)
-  :config
-  (setq python-indent-offset 4))
-
-(use-package elpy
-  :ensure t
-  :after (company python)
-  :init (elpy-enable)
-  :config
-  (setq elpy-rpc-backend "jedi"
-        elpy-rpc-python-command "python"
-        elpy-rpc-virtualenv-path 'current
-        py-autopep8-options '("--ignore E402"))
-  :hook
-  (elpy-mode . py-autopep8-enable-on-save)
-  (elpy-mode . hs-minor-mode))
-
-(use-package pyenv-mode
-  :ensure t
-  :if
-  (executable-find "pyenv")
-  :init
-  (add-to-list 'exec-path "~/.pyenv/shims")
-  (setenv "WORKON_HOME" "~/.pyenv/versions/")
-  :config
-  (pyenv-mode)
-  :bind
-  ("C-x p e" . pyenv-activate-current-project))
+(load-file "~/.emacs.d/modes/python-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; AUCTEX
-(use-package tex-site
-  :ensure auctex
-  :mode ("\\.tex\\'" . latex-mode)
-  :config
-  (setq-default TeX-master nil
-                TeX-auto-save t
-                TeX-save-query nil
-                TeX-parse-self t)
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (rainbow-delimiters-mode)
-              (company-mode)
-              (smartparens-mode)
-              (turn-on-reftex)
-              (reftex-mode t)
-              (flyspell-mode t)
-              (setq reftex-plug-into-AUCTeX t)
-              (reftex-isearch-minor-mode)
-              (setq TeX-PDF-mode t)
-              (setq TeX-source-correlate-method 'synctex)
-              (setq TeX-source-correlate-start-server t))))
-
-;; Update PDF buffers after successful LaTeX runs
-(add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
-           #'TeX-revert-document-buffer)
-
-;; to use pdfview with auctex
-(add-hook 'LaTeX-mode-hook 'pdf-tools-install)
-
-;; to use pdfview with auctex
-(setq TeX-view-program-selection '((output-pdf "pdf-tools"))
-       TeX-source-correlate-start-server t)
-(setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
-
-(use-package reftex
-  :ensure t
-  :after (auctex)
-  :config
-  (setq reftex-cite-prompt-optional-args t
-        reftex-plug-into-AUCTeX t))
-
-(use-package pdf-tools
-  :ensure t
-  :mode ("\\.pdf\\'" . pdf-tools-install)
-  :bind ("C-c C-g" . pdf-sync-forward-search)
-  :defer t
-  :config
-  (setq mouse-wheel-follow-mouse t
-        pdf-view-resize-factor 1.10))
+(load-file "~/.emacs.d/modes/auctex-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Lua-mode
-(use-package lua-mode
-  :mode ("\\.lua$" . lua-mode)
-  :interpreter ("lua" . lua-mode))
+;; Lua
+;; (load-file "~/.emacs.d/modes/lua-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; JS2-mode
-;; (use-package js2-mode
-;;   :ensure nil
-;;   :mode ("\\.js\\'" . js2-mode)
-;;   :hook ((js2-mode . js2-imenu-extras-mode)
-;;          (js2-mode . js2-refactor-mode)))
+;; Javascript
+;; (load-file "~/.emacs.d/modes/js-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LISP and SLIME
