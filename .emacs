@@ -113,7 +113,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; M-x butterfly with any phrase
-(defun w/topic-butterfly (topic)
+(defun ggs/topic-butterfly (topic)
   (interactive "Mtopic: ")
   (progn
     (switch-to-buffer (get-buffer-create "*topic*"))
@@ -173,6 +173,8 @@
   :ensure nil
   :hook (prog-mode . electric-pair-mode))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Company configuration
 (use-package company
   :ensure t
   :config (global-company-mode)
