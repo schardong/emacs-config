@@ -14,41 +14,6 @@
 (require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Installing all packages
-(setq *cpp-pkgs* '(clang-format cmake-mode eldoc project xref eglot))
-
-(setq *go-pkgs* '(company-go flycheck-golangci-lint go-mode go-scratch go-snippets))
-
-(setq *python-pkgs* '(elpy pip-requirements py-isort pyenv-mode py-autopep8 py-import-check flymake-python-pyflakes importmagic jedi ein))
-
-(setq *julia-pkgs* '(flycheck-julia julia-mode julia-repl julia-shell))
-
-(setq *js-pkgs* '(js2-mode js2-refactor xref-js2))
-
-(setq *lisp-pkgs* '(slime slime-company))
-
-(setq *docker-pkgs* '(dockerfile-mode docker-compose-mode))
-
-(setq *misc-pkgs* '(auctex plan9-theme eink-theme exec-path-from-shell graphviz-dot-mode magit markdown-mode org-bullets yaml-mode))
-
-(setq *my-pkgs* (append *cpp-pkgs* *python-pkgs* *misc-pkgs*))
-
-(unless package-archive-contents
-  (package-refresh-contents))
-
-(unless (package-installed-p 'org)
-  (package-install 'org))
-
-(defun process-pkg (p)
-  "Installs a package if not already installed."
-  (if (not (null p))
-      (unless (package-installed-p p)
-    (package-install p)))
-  (package-installed-p p))
-
-(mapcar 'process-pkg *my-pkgs*)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. options
 (setq visible-bell t)
 (display-time)
@@ -63,10 +28,15 @@
       kept-old-versions 5    ; and how many of the old
       )
 
+;; Removes the menu bar on terminal displays (to save space, and due to their uselesness)
 (unless (display-graphic-p)
   (menu-bar-mode -1))
+
+;; Applies the theme only on graphical displays, not on terminal instances
 (when (display-graphic-p)
-  (load-theme 'plan9 t))
+  (use-package acme-theme
+    :ensure t
+    :config (load-theme 'acme t)))
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -79,17 +49,6 @@
 ;; Make shebang (#!) file executable when saved
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
-(use-package which-key
-  :ensure t
-  :config
-  (add-hook 'after-init-hook 'which-key-mode))
-
-(use-package yasnippet
-  :ensure t
-  :config
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
-  (yas-global-mode 1))
-
 (setq scroll-margin 0
       scroll-conservatively 10000
       scroll-preserve-screen-position t
@@ -99,13 +58,8 @@
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
-;; key bindings for macos (from https://www.emacswiki.org/emacs/EmacsForMacOS#h5o-24)
-(when (eq system-type 'darwin)
-  (setq mac-right-option-modifier 'none))
-
 ;; Binding modifier keys
 ;; The variables available for binding the modifier keys:
-
 ;; mac-function-modifier
 ;; mac-control-modifier
 ;; mac-command-modifier
@@ -113,18 +67,52 @@
 ;; mac-right-command-modifier
 ;; mac-right-control-modifier
 ;; mac-right-option-modifier
-
 ;; values can be 'control, 'alt, 'meta, 'super, 'hyper, nil (setting to nil allows the OS to assign values)
+;; key bindings for macos (from https://www.emacswiki.org/emacs/EmacsForMacOS#h5o-24)
+(when (eq system-type 'darwin)
+  (setq mac-right-option-modifier 'none))
+
 ;; Only y/n answers
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Open dired folders in same buffer
-(put 'dired-find-alternate-file 'disabled nil)
-;; Sort Dired buffers
-(setq dired-listing-switches "-agho --group-directories-first")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Which key
+(use-package which-key
+  :ensure t
+  :config
+  (add-hook 'after-init-hook 'which-key-mode))
 
-(setq dired-guess-shell-alist-user `(("\\.mp4\\'" "mpv")))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; YASnippet
+(use-package yasnippet
+  :ensure t
+  :config
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
+  (yas-global-mode 1))
 
+(use-package yasnippet-snippets
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DirED
+(use-package dired
+  :init
+  ;; Sort Dired buffers. If we are on a macos system, change the default ls to coreutils ls (aka gls)
+  ;; See: https://github.com/d12frosted/homebrew-emacs-plus/issues/383
+  (when (eq system-type 'darwin)
+    (setq insert-directory-program "gls" dired-use-ls-dired t))
+  :config
+  (setq dired-listing-switches "-agho --group-directories-first"
+        dired-guess-shell-alist-user `(("\\.mp4\\'" "mpv")))
+  ;; Open dired folders in same buffer
+  (put 'dired-find-alternate-file 'disabled nil))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Project
+(use-package project :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; M-x butterfly with any phrase
 (defun w/topic-butterfly (topic)
   (interactive "Mtopic: ")
   (progn
@@ -188,7 +176,34 @@
 (use-package company
   :ensure t
   :config (global-company-mode)
-  :diminish company-mode)
+  :diminish company-mode
+  :custom
+  ;; Search other buffers with the same modes for completion instead of
+  ;; searching all other buffers.
+  (company-dabbrev-other-buffers t)
+  (company-dabbrev-code-other-buffers t)
+  ;; M-<num> to select an option according to its number.
+  (company-show-numbers t)
+  ;; Only 2 letters required for completion to activate.
+  (company-minimum-prefix-length 3)
+  ;; Do not downcase completions by default.
+  (company-dabbrev-downcase nil)
+  ;; Even if I write something with the wrong case,
+  ;; provide the correct casing.
+  (company-dabbrev-ignore-case t)
+  ;; company completion wait
+  (company-idle-delay 0.2)
+  ;; No company-mode in shell & eshell
+  (company-global-modes '(not eshell-mode shell-mode))
+  ;; Use company with text and programming modes.
+  :hook ((text-mode . company-mode)
+         (prog-mode . company-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Writegood mode for better prose and reading complexity measurements
+(use-package writegood-mode
+  :ensure t
+  :bind ("C-c g" . writegood-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Remove whitespaces and empty lines
@@ -221,17 +236,22 @@
     (exec-path-from-shell-initialize))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Markdown mode
+(load-file "~/.emacs.d/modes/markdown-mode.el")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C/C++ packages and configs
 (load-file "~/.emacs.d/modes/c-mode.el")
 
-(use-package project :ensure t)
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; EGLOT
 (use-package eglot
   :ensure t
-  :after 'project
+  :after '(project)
   :config
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
   (add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
+  (setq eglot-autoshutdown t)
   :hook
   (c-mode . eglot-ensure)
   (c++-mode . eglot-ensure)
