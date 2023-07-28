@@ -58,6 +58,9 @@
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
+;; Activating hs-minor-mode for prog-mode
+(add-hook 'prog-mode-hook #'(lambda () (hs-minor-mode t)))
+
 ;; Binding modifier keys
 ;; The variables available for binding the modifier keys:
 ;; mac-function-modifier
@@ -262,6 +265,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
 (load-file "~/.emacs.d/modes/python-mode.el")
+(load-file "~/.emacs.d/modes/elpy-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; AUCTEX
