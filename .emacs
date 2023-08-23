@@ -281,6 +281,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LISP and SLIME
+(load-file "~/.emacs.d/modes/lisp-mode.el")
 ;; (use-package slime
 ;;   :ensure t
 ;;   :defer t
