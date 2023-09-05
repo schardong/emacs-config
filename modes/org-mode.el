@@ -18,6 +18,7 @@
         org-agenda-files (file-expand-wildcards "~/Documents/org/*.org")
         org-todo-keywords '((sequence "TODO"
                                       "WAITING"
+                                      "ONGOING"
                                       "|"
                                       "DEFERRED"
                                       "CANCELLED"
