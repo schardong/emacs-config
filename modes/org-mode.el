@@ -15,7 +15,7 @@
     :ensure t
     :hook (org-mode . org-bullets-mode))
   (setq org-log-done t
-        org-agenda-files (file-expand-wildcards "~/Documents/org/*.org")
+        org-agenda-files '("~/Documents/org/codeace.org" "~/Documents/org/distributed_graphics.org" "~/Documents/org/home.org" "~/Documents/org/isr.org" "~/Documents/org/isr_implicits.org" "~/Documents/org/visgraf.org" "~/Documents/org/visualid.org")
         org-todo-keywords '((sequence "TODO"
                                       "WAITING"
                                       "ONGOING"
