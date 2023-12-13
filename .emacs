@@ -234,8 +234,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; READING PATH FROM SHELL
 (use-package exec-path-from-shell
-  :if (or (memq window-system '(mac ns x))
-          (memq window-system 'ns))
+  :if (memq window-system '(mac ns x))
   :ensure t
   :config
     (exec-path-from-shell-initialize))

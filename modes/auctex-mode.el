@@ -1,24 +1,29 @@
-(use-package tex-site
+(use-package latex
   :ensure auctex
-  :mode ("\\.tex\\'" . latex-mode)
+  :defer t
+  ;:mode ("\\.tex\\'" . latex-mode)
   :config
   (setq-default TeX-master nil
                 TeX-auto-save t
                 TeX-save-query nil
-                TeX-parse-self t)
+                TeX-parse-self t
+                reftex-plug-into-AUCTeX t)
   (add-hook 'LaTeX-mode-hook
             (lambda ()
-              (rainbow-delimiters-mode)
-              (company-mode)
-              (smartparens-mode)
-              (turn-on-reftex)
-              (reftex-mode t)
-              (flyspell-mode t)
-              (setq reftex-plug-into-AUCTeX t)
-              (reftex-isearch-minor-mode)
               (setq TeX-PDF-mode t)
               (setq TeX-source-correlate-method 'synctex)
-              (setq TeX-source-correlate-start-server t))))
+              (setq TeX-source-correlate-start-server t)))
+  :hook
+  (LaTeX-mode . TeX-PDF-mode)
+  (LaTeX-mode . company-mode)
+  (LaTeX-mode . flyspell-mode)
+  (LaTeX-mode . flycheck-mode)
+  (LaTeX-mode . LaTeX-math-mode)
+  (LaTeX-mode . turn-on-reftex)
+  (LaTeX-mode . turn-on-cdlatex)
+  (LaTeX-mode . rainbow-delimiters)
+  (LaTeX-mode . smartparens)
+  (LaTeX-mode . reftex-isearch-minor))
 
 ;; Update PDF buffers after successful LaTeX runs
 (add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
@@ -35,9 +40,10 @@
 (use-package reftex
   :ensure t
   :after (auctex)
+  :commands turn-on-reftex
   :config
-  (setq reftex-cite-prompt-optional-args t
-        reftex-plug-into-AUCTeX t))
+  (setq reftex-plug-into-AUCTeX t
+        reftex-cite-prompt-optional-args t))
 
 (use-package pdf-tools
   :ensure t
