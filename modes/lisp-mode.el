@@ -13,3 +13,5 @@
         common-lisp-hyperspec-issuex-table (concat common-lisp-hyperspec-root "Data/Map_IssX.txt"))
   :mode (("\\.lisp\\'" . slime-mode)
          ("\\.lisp\\'" . lisp-mode)))
+
+(load (expand-file-name "~/quicklisp/slime-helper.el"))
