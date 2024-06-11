@@ -111,8 +111,14 @@
   (put 'dired-find-alternate-file 'disabled nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Project
-(use-package project :ensure t)
+;; Projectile
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; M-x butterfly with any phrase
@@ -250,17 +256,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EGLOT
-(use-package eglot
-  :ensure t
-  :after '(project)
-  :config
-  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-  (add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
-  (setq eglot-autoshutdown t)
-  :hook
-  (c-mode . eglot-ensure)
-  (c++-mode . eglot-ensure)
-  (python-mode . eglot-ensure))
+;; (use-package eglot
+;;   :ensure t
+;;   :after '(projectile)
+;;   :config
+;;   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+;;   (add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
+;;   (setq eglot-autoshutdown t)
+;;   :hook
+;;   (c-mode . eglot-ensure)
+;;   (c++-mode . eglot-ensure)
+;;   (python-mode . eglot-ensure))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
