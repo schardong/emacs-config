@@ -34,9 +34,9 @@
 
 ;; Applies the theme only on graphical displays, not on terminal instances
 (when (display-graphic-p)
-  (use-package acme-theme
+  (use-package eink-theme
     :ensure t
-    :config (load-theme 'acme t)))
+    :config (load-theme 'eink t)))
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -223,6 +223,11 @@
   :hook (before-save . whitespace-cleanup))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Sink for plan9front plumb interaction
+(use-package sink
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Magit
 (use-package magit
   :ensure t
@@ -236,6 +241,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org and ROAM
 (load-file "~/.emacs.d/modes/org-mode.el")
+(load-file "~/.emacs.d/modes/roam.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; READING PATH FROM SHELL
@@ -248,7 +254,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Markdown mode
-(load-file "~/.emacs.d/modes/markdown-mode.el")
+;; (load-file "~/.emacs.d/modes/markdown-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C/C++ packages and configs
@@ -288,21 +294,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LISP and SLIME
 (load-file "~/.emacs.d/modes/lisp-mode.el")
-;; (use-package slime
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   (setq inferior-lisp-program "sbcl"
-;;         slime-contribs '(slime-fancy slime-quicklisp slime-asdf)
-;;         slime-complete-symbol-function 'slime-fuzzy-complete-symbol
-;;         slime-net-coding-system 'utf-8-unix
-;;         slime-lisp-implementations '((sbcl ("/usr/bin/sbcl"))))
-;;   :config
-;;   (setq common-lisp-hyperspec-root "/usr/share/doc/hyperspec/HyperSpec/"
-;;         common-lisp-hyperspec-symbol-table (concat common-lisp-hyperspec-root "Data/Map_Sym.txt")
-;;         common-lisp-hyperspec-issuex-table (concat common-lisp-hyperspec-root "Data/Map_IssX.txt"))
-;;   :mode (("\\.lisp\\'" . slime-mode)
-;;          ("\\.lisp\\'" . lisp-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Docker
