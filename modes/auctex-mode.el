@@ -1,3 +1,5 @@
+(add-hook 'latex-mode-hook 'reftex-mode)
+
 (use-package tex-site
   :config
   (setq TeX-auto-save t

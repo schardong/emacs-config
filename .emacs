@@ -13,12 +13,25 @@
 
 (require 'use-package)
 
+;; Good reference: https://gitlab.univ-lille.fr/michael.hauspie/emacs/-/blob/master/configuration.org
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. options
 (setq visible-bell t)
 (display-time)
 (when (version<= "26.1" emacs-version)
   (global-display-line-numbers-mode))
+
+;; Kill the whole line, including the \n
+(setq kill-whole-line t)
+
+
+;; Highlight current line
+(global-hl-line-mode t)
+
+;; Detailed window title
+(setq-default frame-title-format (list "%65b %f"))
+(setq-default icon-title-format (list "%b"))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
       backup-by-copying t    ; Don't delink hardlinks
@@ -79,6 +92,14 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tramp theme
+;; This is to display the hostname when editing a remote file.
+(use-package tramp-theme
+  :ensure t
+  :config
+  (load-theme 'tramp t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Which key
 (use-package which-key
   :ensure t
@@ -109,6 +130,21 @@
         dired-guess-shell-alist-user `(("\\.mp4\\'" "mpv")))
   ;; Open dired folders in same buffer
   (put 'dired-find-alternate-file 'disabled nil))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Treemacs
+(use-package treemacs
+  :ensure t
+  :config
+    (setq treemacs-follow-after-init t
+          treemacs-is-never-other-window t)
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-git-mode 'deferred)
+    (treemacs-fringe-indicator-mode t)
+    :bind
+    (:map global-map
+          ("C-M-t"   . treemacs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Projectile
