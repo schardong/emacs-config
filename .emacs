@@ -17,6 +17,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. options
+(setq custom-file "~/.emacs-custom.el")
+(load custom-file)
+
 (setq visible-bell t)
 (display-time)
 (when (version<= "26.1" emacs-version)
