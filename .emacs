@@ -50,9 +50,9 @@
 
 ;; Applies the theme only on graphical displays, not on terminal instances
 (when (display-graphic-p)
-  (use-package eink-theme
+  (use-package acme-theme
     :ensure t
-    :config (load-theme 'eink t)))
+    :config (load-theme 'acme t)))
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
