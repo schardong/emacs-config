@@ -48,14 +48,7 @@
   ;; (LaTeX-mode . LaTeX-math-mode)
   ;; (LaTeX-mode . rainbow-delimiters)
   ;; (LaTeX-mode . smartparens)
-  ;; (LaTeX-mode . reftex-isearch-minor)
-  )
-
-(use-package reftex
-  :ensure t
-  :config
-  (setq reftex-plug-into-AUCTeX t
-        reftex-enable-partial-scanning t))
+  ;; (LaTeX-mode . reftex-isearch-minor))
 
 ;; (use-package pdf-tools
 ;;   :ensure t
