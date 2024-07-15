@@ -1,11 +1,14 @@
 (add-hook 'latex-mode-hook 'reftex-mode)
 
-(use-package tex-site
+(use-package tex
+  :ensure auctex
   :config
   (setq TeX-auto-save t
         TeX-parse-self t
-        TeX-PDF-mode t)
-  (setq-default TeX-master nil
+        TeX-PDF-mode t
+        TeX-view-program-list '((Okular "okular" "okular %b"))
+        TeX-view-program-selection '((output-pdf "Okular")))
+  (setq-default TeX-master 'shared
                 TeX-command-extra-options "-shell-escape"))
 
 (use-package reftex
