@@ -147,7 +147,7 @@
     (treemacs-fringe-indicator-mode t)
     :bind
     (:map global-map
-          ("C-M-t"   . treemacs)))
+          ("C-s-t"   . treemacs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Projectile
