@@ -1,5 +1,3 @@
-(add-hook 'latex-mode-hook 'reftex-mode)
-
 (use-package tex
   :ensure auctex
   :defer 4
@@ -10,11 +8,11 @@
         TeX-view-program-list '((Okular "okular" "okular %b"))
         TeX-view-program-selection '((output-pdf "Okular"))
         reftex-cite-format 'bibtex
-        reftex-plug-into-AUCTeX t))
+        reftex-plug-into-AUCTeX t)
   (setq-default TeX-master 'shared
                 TeX-command-extra-options "-shell-escape")
   :hook
-  (LaTeX-mode . reftex-mode)
+  (LaTeX-mode . reftex-mode))
 
 (use-package reftex
   :ensure t
