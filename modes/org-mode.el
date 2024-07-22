@@ -15,7 +15,7 @@
     :ensure t
     :hook (org-mode . org-bullets-mode))
   (setq org-log-done t
-        org-agenda-files '("~/Documents/org/codeface.org" "~/Documents/org/courses.org" "~/Documents/org/distributed_graphics.org" "~/Documents/org/home.org" "~/Documents/org/isr.org" "~/Documents/org/isr_implicits.org" "~/Documents/org/reviews.org" "~/Documents/org/visgraf.org" "~/Documents/org/visualid.org")
+        org-agenda-files '("~/Documents/org/blockdfake.org" "~/Documents/org/codeface.org" "~/Documents/org/courses.org" "~/Documents/org/distributed_graphics.org" "~/Documents/org/home.org" "~/Documents/org/isr.org" "~/Documents/org/isr_implicits.org" "~/Documents/org/morphing.org" "~/Documents/org/reviews.org" "~/Documents/org/visgraf.org" "~/Documents/org/visualid.org")
         org-todo-keywords '((sequence "TODO"
                                       "WAITING"
                                       "ONGOING"
