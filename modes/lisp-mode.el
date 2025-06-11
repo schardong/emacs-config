@@ -14,3 +14,4 @@
          ("\\.lisp\\'" . lisp-mode)))
 
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
+(load (expand-file-name "~/.emacs.d/modes/slite.el"))
