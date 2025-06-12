@@ -3,7 +3,7 @@
   :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
-         (org-mode . flyspell-mode)
+;;         (org-mode . flyspell-mode)
          (org-mode . yas-minor-mode))
   :bind
   (("C-c l" . org-store-link)
@@ -19,7 +19,6 @@
                            "~/Documents/org/blockdfake.org"
                            "~/Documents/org/codeface.org"
                            "~/Documents/org/courses.org"
-                           "~/Documents/org/distributed_graphics.org"
                            "~/Documents/org/home.org"
                            "~/Documents/org/isr.org"
                            "~/Documents/org/isr_implicits.org"
@@ -34,9 +33,9 @@
                                       "CANCELLED"
                                       "DONE"))))
 
-(use-package org-tree-slide
-  :ensure t
-  :after org)
+;; (use-package org-tree-slide
+;;   :ensure t
+;;   :after org)
 
 (use-package org-pomodoro
   :ensure t
