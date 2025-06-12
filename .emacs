@@ -20,6 +20,10 @@
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
 
+;; Emacs will treat manual buffer switching the same as programmatic switching
+;; https://www.masteringemacs.org/article/demystifying-emacs-window-manager
+(setq switch-to-buffer-obey-display-actions t)
+
 (setq visible-bell t)
 (display-time)
 (when (version<= "26.1" emacs-version)
@@ -27,7 +31,6 @@
 
 ;; Kill the whole line, including the \n
 (setq kill-whole-line t)
-
 
 ;; Highlight current line
 (global-hl-line-mode t)
@@ -103,6 +106,13 @@
   (load-theme 'tramp t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tramp
+;; from https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
+(setq vc-handled-backends '(Git))
+(setq remote-file-name-inhibit-locks t)
+(setq tramp-verbose 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Which key
 (use-package which-key
   :ensure t
@@ -140,24 +150,27 @@
   :ensure t
   :config
     (setq treemacs-follow-after-init t
-          treemacs-is-never-other-window t)
+          treemacs-is-never-other-window t
+          treemacs-indentation 4)
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
     (treemacs-git-mode 'deferred)
-    (treemacs-fringe-indicator-mode t)
+    (treemacs-fringe-indicator-mode 'always)
     :bind
     (:map global-map
-          ("C-s-t"   . treemacs)))
+          ("C-c t" . treemacs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Projectile
-(use-package projectile
-  :ensure t
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map)))
+;; (use-package projectile
+;;   :ensure t
+;;   :init
+;;   (projectile-mode +1)
+;;   :bind (:map projectile-mode-map
+;;               ("s-p" . projectile-command-map)
+;;               ("C-c p" . projectile-command-map))
+;;   :config
+;;   (setq projectile-mode-line "Projectile"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; M-x butterfly with any phrase
@@ -234,7 +247,7 @@
   (company-dabbrev-code-other-buffers t)
   ;; M-<num> to select an option according to its number.
   (company-show-numbers t)
-  ;; Only 2 letters required for completion to activate.
+  ;; Only 3 letters required for completion to activate.
   (company-minimum-prefix-length 3)
   ;; Do not downcase completions by default.
   (company-dabbrev-downcase nil)
@@ -247,7 +260,11 @@
   (company-global-modes '(not eshell-mode shell-mode))
   ;; Use company with text and programming modes.
   :hook ((text-mode . company-mode)
-         (prog-mode . company-mode)))
+         (prog-mode . company-mode))
+  :bind
+  (:map company-active-map
+        ([tab] . company-complete-selection)
+        ("TAB" . company-complete-selection)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Writegood mode for better prose and reading complexity measurements
@@ -316,7 +333,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
 (load-file "~/.emacs.d/modes/python-mode.el")
-(load-file "~/.emacs.d/modes/elpy-mode.el")
+;; (load-file "~/.emacs.d/modes/elpy-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; AUCTEX
