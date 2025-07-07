@@ -318,17 +318,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EGLOT
-;; (use-package eglot
-;;   :ensure t
+(use-package eglot
+  :ensure t
+  :defer t
 ;;   :after '(projectile)
-;;   :config
+  :config
 ;;   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-;;   (add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
+  (add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
 ;;   (setq eglot-autoshutdown t)
-;;   :hook
+  :hook
 ;;   (c-mode . eglot-ensure)
 ;;   (c++-mode . eglot-ensure)
-;;   (python-mode . eglot-ensure))
+  (python-mode . eglot-ensure))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python and ELPY
@@ -349,7 +350,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LISP and SLIME
-(load-file "~/.emacs.d/modes/lisp-mode.el")
+;; (load-file "~/.emacs.d/modes/lisp-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Docker
