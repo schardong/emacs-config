@@ -9,17 +9,17 @@
           (pyenv-mode-set pyenv-current-version)
           (message (concat "Setting virtualenv to " pyenv-current-version))))))
 
-(use-package python
-  :ensure t
-  :defer 10
-  :hook python-mode-hook
-  :init (setq-default indent-tabs-mode nil)
-  :mode
-  ("\\.py\\'" . python-mode)
-  ("\\.wsgi$" . python-mode)
-  :interpreter ("python" . python-mode)
-  :config
-  (setq python-indent-offset 4))
+;; (use-package python
+;;   :ensure t
+;;   :defer 1
+;;   :hook python-mode-hook
+;;   :init (setq-default indent-tabs-mode nil)
+;;   :mode
+;;   ("\\.py\\'" . python-mode)
+;;   ("\\.wsgi$" . python-mode)
+;;   :interpreter ("python" . python-mode)
+;;   :config
+;;   (setq python-indent-offset 4))
 
 (use-package pyenv-mode
   :ensure t
@@ -32,3 +32,9 @@
   (pyenv-mode)
   :bind
   ("C-x p e" . pyenv-activate-current-project))
+
+(use-package python-black
+  :ensure t
+  :demand t
+  :after python
+  :hook ((python-mode . python-black-on-save-mode)))
