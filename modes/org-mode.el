@@ -62,3 +62,14 @@
  (org-roam-db-autosync-mode)
  ;;If using org-roam-protocol
  (require 'org-roam-protocol))
+
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+             '("book-noparts"
+               "\\documentclass[10pt]{book}"
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
